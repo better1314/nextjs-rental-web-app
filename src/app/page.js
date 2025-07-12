@@ -1,94 +1,41 @@
-import Image from "next/image";
-import styles from "./page.module.css";
+import Link from "next/link"
+import { Mountain } from "lucide-react"
+import { Button } from "@/components/ui/button"
 
 export default function Home() {
   return (
-    <div className={styles.page}>
-      <main className={styles.main}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol>
-          <li>
-            Get started by editing <code>src/app/page.js</code>.
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+    <div className="min-h-screen flex flex-col bg-gradient-to-br from-slate-50 to-slate-100">
+      <div className="flex-1 flex flex-col items-center justify-center">
+        <div className="text-center space-y-8 p-8">
+          {/* Logo Section */}
+          <div className="flex flex-col items-center space-y-4">
+            <div className="w-24 h-24 bg-primary rounded-2xl flex items-center justify-center shadow-lg">
+              <Mountain className="w-12 h-12 text-primary-foreground" />
+            </div>
+            <h1 className="text-4xl md:text-5xl font-bold text-slate-800 tracking-tight">RentEase</h1>
+            <p className="text-lg text-slate-600 max-w-md">Simplifying property rentals for landlords and tenants</p>
+          </div>
 
-        <div className={styles.ctas}>
-          <a
-            className={styles.primary}
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className={styles.logo}
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-            className={styles.secondary}
-          >
-            Read our docs
-          </a>
+          {/* Action Buttons */}
+          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+            <Button asChild size="lg" className="w-full sm:w-auto min-w-[120px]">
+              <Link href="/login">Login</Link>
+            </Button>
+            <Button asChild variant="outline" size="lg" className="w-full sm:w-auto min-w-[120px] bg-transparent">
+              <Link href="/register">Register</Link>
+            </Button>
+          </div>
+
+          {/* Optional subtitle */}
+          <div className="text-sm text-slate-500 mt-8">
+            New to RentEase? Register as a tenant to find your perfect rental
+          </div>
         </div>
-      </main>
-      <footer className={styles.footer}>
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
+      </div>
+
+      {/* Footer */}
+      <footer className="py-6 text-center border-t border-slate-200 bg-white/50 backdrop-blur-sm">
+        <p className="text-sm text-slate-600">© 2024 RentEase. All rights reserved.</p>
       </footer>
     </div>
   );
