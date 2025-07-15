@@ -383,7 +383,10 @@ export default function Dashboard() {
 
         {/* Bills & Payment Section */}
         <div className="mt-8">
-          <TenantBillSection selectedRental={currentRental} />
+          <TenantBillSection selectedRental={currentRental ? {
+            id: currentRental.rentalId,
+            ...currentRental
+          } : null} />
         </div>
       </main>
     </div>

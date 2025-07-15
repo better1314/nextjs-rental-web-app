@@ -89,9 +89,12 @@ export function TenantBillSection({ selectedRental }) {
 
   // Load bills when selectedRental changes
   useEffect(() => {
+    console.log("selectedRental changed:", selectedRental) // Debug log
     if (selectedRental?.id) {
+      console.log("Loading bills for rental ID:", selectedRental.id) // Debug log
       loadBills()
     } else {
+      console.log("No selectedRental or ID, clearing bills") // Debug log
       setBills([])
       setFilteredBills([])
     }
@@ -114,11 +117,13 @@ export function TenantBillSection({ selectedRental }) {
   const loadBills = async () => {
     if (!selectedRental?.id) return
 
+    console.log("loadBills called for rental ID:", selectedRental.id) // Debug log
     setIsLoading(true)
     setError("")
 
     try {
       const result = await billAPI.getTenantBills(selectedRental.id)
+      console.log("Bills API result:", result) // Debug log
       if (result.success) {
         setBills(result.bills)
         // Reset year filter when loading new bills
