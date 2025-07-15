@@ -20,9 +20,12 @@ import {
   Mountain,
   AlertCircle,
   Loader2,
+  ChevronLeft,
+  ChevronRight,
 } from "lucide-react"
 import { fetcher } from "@/common/webclient"
 import { sessionUtils } from "@/common/session"
+import { TenantBillSection } from "@/components/tenant-bill-section"
 
 export default function Dashboard() {
   const router = useRouter()
@@ -376,6 +379,11 @@ export default function Dashboard() {
               )}
             </CardContent>
           </Card>
+        </div>
+
+        {/* Bills & Payment Section */}
+        <div className="mt-8">
+          <TenantBillSection selectedRental={currentRental} />
         </div>
       </main>
     </div>

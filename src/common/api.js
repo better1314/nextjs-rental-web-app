@@ -355,6 +355,60 @@ export const billAPI = {
     }
   },
 
+  // Get bills for tenant by rental ID
+  getTenantBills: async (rentalId) => {
+    try {
+      const response = await fetcher("http://localhost:8081/payment/retrieveTenantBill", {
+        body: JSON.stringify({
+          rentalId: rentalId,
+        }),
+      })
+
+      return {
+        success: true,
+        bills: response.billList || [],
+      }
+    } catch (error) {
+      console.error("Error fetching tenant bills:", error)
+      return {
+        success: false,
+        bills: [],
+        error: error.message || "Failed to fetch bills",
+      }
+    }
+  },
+
+  // Upload receipt for a bill
+  uploadReceipt: async (billId, file) => {
+    try {
+      const formData = new FormData()
+      formData.append("billId", billId)
+      formData.append("receipt", file)
+
+      const response = await fetch("http://localhost:8081/payment/uploadReceipt", {
+        method: "POST",
+        body: formData,
+      })
+
+      const data = await response.json()
+
+      if (data.responseStatus === "0") {
+        throw new Error(data.message || "Upload failed")
+      }
+
+      return {
+        success: true,
+        message: data.message || "Receipt uploaded successfully!",
+      }
+    } catch (error) {
+      console.error("Error uploading receipt:", error)
+      return {
+        success: false,
+        error: error.message || "Failed to upload receipt",
+      }
+    }
+  },
+
   createBills: async (rentalId, bills) => {
     const response = await fetcher("http://localhost:8081/payment/createBill", {
         body: JSON.stringify({
