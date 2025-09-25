@@ -16,7 +16,7 @@ import {
   SidebarMenuSubItem,
 } from "@/components/ui/sidebar"
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible"
-import { Mountain, Home, Building, Users, FileText, UserPlus, Plus, ChevronDown, User, FileCog, DollarSign} from "lucide-react"
+import { Mountain, Home, Building, Users, FileText, UserPlus, Plus, ChevronDown, User, FileCog, DollarSign, MonitorCog, Clock, Signature} from "lucide-react"
 import { usePathname } from "next/navigation"
 
 // Admin sidebar menu structure with collapsible sections
@@ -94,6 +94,24 @@ const menuSections = [
         title: "Edit Bill",
         icon: FileCog,
         url: "/admin/edit-bill",
+      },
+      {
+        title: "Approve Bill",
+        icon: Signature,
+        url: "/admin/approve-bill",
+      },
+    ],
+  },
+  {
+    id: "system",
+    title: "System Maintenance",
+    icon: MonitorCog,
+    type: "collapsible",
+    items: [
+      {
+        title: "Check Scheduler",
+        icon: Clock,
+        url: "/admin/check-scheduler",
       },
     ],
   },

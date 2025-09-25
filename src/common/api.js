@@ -1,88 +1,17 @@
-import { fetcher } from "@/common/webclient"
+import { fetcher, fetchImg, get } from "@/common/webclient"
 
-const DUMMY_BILL_TYPES = [
-  { id: "RENT", name: "Monthly Rent"},
-  { id: "UTIL", name: "Utilities"},
-  { id: "MAINT", name: "Maintenance Fee", description: "Property maintenance and upkeep" },
-  { id: "DEPOSIT", name: "Security Deposit", description: "Refundable security deposit" },
-  { id: "LATE", name: "Late Payment Fee", description: "Penalty for late payment" },
-  { id: "CLEAN", name: "Cleaning Fee", description: "Professional cleaning service" },
-  { id: "REPAIR", name: "Repair Charges", description: "Property repair and restoration" },
-  { id: "OTHER", name: "Other Charges", description: "Miscellaneous charges" },
-]
 
-const DUMMY_RENTALS = [
-  {
-    id: "RENT001",
-    rentalStartDate: "2024-01-01",
-    rentalEndDate: "2024-12-31",
-    rentalStatus: "ACTIVE",
-    roomId: "R001",
-    roomName: "Master Bedroom",
-    propertyName: "Greenwood Residence",
-    propertyAddress: "123, Jalan Hijau, Taman Indah, 50000 Kuala Lumpur",
-    fullName: "John Doe",
-    contactNo: "+60123456789",
-    nric: "901234-56-7890",
-    email: "john.doe@example.com",
-  },
-  {
-    id: "RENT002",
-    rentalStartDate: "2024-02-15",
-    rentalEndDate: "2025-02-14",
-    rentalStatus: "ACTIVE",
-    roomId: "A101",
-    roomName: "Studio",
-    propertyName: "Blue Sky Apartment",
-    propertyAddress: "45, Lorong Biru, Bandar Baru, 40000 Shah Alam",
-    fullName: "Jane Smith",
-    contactNo: "+60198765432",
-    nric: "851234-56-7891",
-    email: "jane.smith@example.com",
-  },
-  {
-    id: "RENT003",
-    rentalStartDate: "2024-03-01",
-    rentalEndDate: "2024-08-31",
-    rentalStatus: "EXPIRED",
-    roomId: "V201",
-    roomName: "Bedroom 1",
-    propertyName: "Sunset Villa",
-    propertyAddress: "789, Persiaran Senja, Bukit Damai, 60000 Petaling Jaya",
-    fullName: "Peter Jones",
-    contactNo: "+60112233445",
-    nric: "921234-56-7892",
-    email: "peter.jones@example.com",
-  },
-  {
-    id: "RENT004",
-    rentalStartDate: "2024-04-01",
-    rentalEndDate: "2025-03-31",
-    rentalStatus: "ACTIVE",
-    roomId: "C301",
-    roomName: "Bedroom A",
-    propertyName: "Riverfront Condo",
-    propertyAddress: "10, Lebuh Sungai, Taman Air, 70000 Seremban",
-    fullName: "Alice Wonderland",
-    contactNo: "+60176543210",
-    nric: "881234-56-7893",
-    email: "alice.w@example.com",
-  },
-  {
-    id: "RENT005",
-    rentalStartDate: "2024-05-15",
-    rentalEndDate: "2024-11-14",
-    rentalStatus: "TERMINATED",
-    roomId: "B401",
-    roomName: "Master Suite",
-    propertyName: "Hilltop Bungalow",
-    propertyAddress: "5, Jalan Puncak, Desa Bukit, 80000 Johor Bahru",
-    fullName: "Bob The Builder",
-    contactNo: "+60134567890",
-    nric: "901234-56-7894",
-    email: "bob.b@example.com",
-  },
-]
+export const dashboardAPI = {
+  getDashboardStats: async () => {
+    try{
+    const response = await get("http://localhost:8081/system/getDashboardStastics")
+
+    return response;
+    }catch(error){
+      throw new Error("Failed to fetch dashboard statistics. Please try again.")
+    }
+  }
+}
 
 export const userAPI = {
   // Search users with pagination
@@ -466,6 +395,209 @@ export const billAPI = {
     return {
       success: true,
       message: `Bill ${billId} deleted successfully!`,
+    }
+  },
+
+  getTenantBills: async (rentalId) => {
+    try {
+      const response = await fetcher("http://localhost:8081/payment/retrieveBill", {
+        body: JSON.stringify({
+          rentalId: rentalId,
+        }),
+      })
+
+      return {
+        success: true,
+        bills: response.billList || [],
+      }
+    } catch (error) {
+      console.error("Error fetching tenant bills:", error)
+      return {
+        success: false,
+        bills: [],
+        error: error.message || "Failed to fetch bills",
+      }
+    }
+  },
+
+  // Upload receipt for a bill
+  uploadReceipt: async (billId, file) => {
+    try {
+      const formData = new FormData()
+      formData.append("billId", billId)
+      formData.append("receipt", file)
+
+      const response = await fetch("http://localhost:8081/payment/uploadReceipt", {
+        method: "POST",
+        body: formData,
+      })
+
+      const data = await response.json()
+
+      if (data.responseStatus === "0") {
+        throw new Error(data.message || "Upload failed")
+      }
+
+      return {
+        success: true,
+        message: data.message || "Receipt uploaded successfully!",
+      }
+    } catch (error) {
+      console.error("Error uploading receipt:", error)
+      return {
+        success: false,
+        error: error.message || "Failed to upload receipt",
+      }
+    }
+  },
+}
+
+export const approveBillAPI = {
+  // Search bills for approval with pagination
+  searchBillsForApproval: async (searchTerm = "", page = 1, limit = 20) => {
+    try {
+      const response = await fetcher("http://localhost:8081/payment/retrieveBillsReceipt", {
+        body: JSON.stringify({
+          query: searchTerm,
+          page: page,
+          limit: limit,
+        }),
+      })
+
+      const startIndex = (page - 1) * limit
+      const endIndex = startIndex + limit
+      const paginatedBills = response.billReceipts.slice(startIndex, endIndex)
+
+      return {
+        success: true,
+        bills: paginatedBills,
+        totalCount: response.totalRecords,
+        hasMore: endIndex < response.billReceipts.length,
+        page: page,
+      }
+    } catch (error) {
+      console.error("Error searching bills for approval:", error)
+      return {
+        success: false,
+        error: "Failed to search bills for approval",
+      }
+    }
+  },
+
+  getReceiptImage: async (imgPath) => {
+    try {
+      const imageUrl = await fetchImg(`http://localhost:8081/payment/files/${imgPath}`)
+
+      return {
+        success: true,
+        imageUrl: imageUrl,
+      }
+    } catch (error) {
+      console.error("Error getting receipt image:", error)
+      return {
+        success: false,
+        error: "Failed to load receipt image",
+      }
+    }
+  },
+
+  // Approve bill
+  approveBill: async (receiptId, billId, username) => {
+    try {
+      const response = await fetcher("http://localhost:8081/payment/approveBill", {
+        body: JSON.stringify({
+          action: "APPROVE",
+          billId: billId,
+          receiptId: receiptId,
+          actionBy: username
+        }),
+      })
+
+      return {
+        success: true,
+        message: `Receipt ${receiptId} approved successfully!`,
+      }
+    } catch (error) {
+      console.error("Error approving bill:", error)
+      return {
+        success: false,
+        error: "Network error occurred while approving bill",
+      }
+    }
+  },
+
+  // Reject bill
+  rejectBill: async (receiptId, billId, username) => {
+    try {
+      const response = await fetcher("http://localhost:8081/payment/approveBill", {
+        body: JSON.stringify({
+          action: "REJECT",
+          billId: billId,
+          receiptId: receiptId,
+          actionBy: username
+        }),
+      })
+
+      return {
+        success: true,
+        message: `Receipt ${receiptId} rejected successfully!`,
+      }
+    } catch (error) {
+      console.error("Error rejecting bill:", error)
+      return {
+        success: false,
+        error: "Network error occurred while rejecting bill",
+      }
+    }
+  },
+}
+
+export const schedulerAPI = {
+  // Get all schedulers
+  getSchedulers: async () => {
+    try {
+      const response = await get("http://localhost:8081/system/getAllSchedulers")
+
+      return {
+        success: true,
+        data: response.schedulerList,
+        message: "Schedulers retrieved successfully",
+      }
+    } catch (error) {
+      console.error("Error fetching schedulers:", error)
+      throw new Error("Failed to fetch schedulers")
+    }
+  },
+
+  getSchedulerHistory: async (schedulerId) => {
+    const response = await fetcher("http://localhost:8081/system/getSchedulerHistory", {
+        body: JSON.stringify({
+          schedulerId: schedulerId,
+        }),
+      })
+
+    return {
+      success: true,
+      data: response.taskHistoryList,
+      message: "Scheduler history loaded successfully",
+    }
+  },
+
+  // Manual trigger scheduler
+  triggerScheduler: async (schedulerId) => {
+    try{
+    const response = await fetcher("http://localhost:8081/system/manualTrigger", {
+        body: JSON.stringify({
+          schedulerId: schedulerId,
+        }),
+      })
+
+      return {
+        success: true,
+        message: `Scheduler with ID "${schedulerId}" triggered successfully`,
+      }
+    }catch(error){
+        throw new Error("Failed to trigger scheduler. Please try again.")
     }
   },
 }

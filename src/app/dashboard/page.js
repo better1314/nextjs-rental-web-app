@@ -26,6 +26,7 @@ import {
 import { fetcher } from "@/common/webclient"
 import { sessionUtils } from "@/common/session"
 import { TenantBillSection } from "@/components/tenant-bill-section"
+import { TenantBillSection } from "@/components/tenant-bill-section"
 
 export default function Dashboard() {
   const router = useRouter()
@@ -242,7 +243,7 @@ export default function Dashboard() {
                   <Phone className="w-4 h-4 text-slate-400" />
                   <div>
                     <p className="text-sm font-medium text-slate-900">Contact Number</p>
-                    <p className="text-sm text-slate-600">{userDetails.contactNumber}</p>
+                    <p className="text-sm text-slate-600">{userDetails.contactNo}</p>
                   </div>
                 </div>
 
@@ -387,7 +388,7 @@ export default function Dashboard() {
             id: currentRental.rentalId,
             ...currentRental
           } : null} />
-        </div>
+          </div>
       </main>
     </div>
   )

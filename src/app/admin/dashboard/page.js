@@ -2,19 +2,12 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { UserCheck, Building, Home, AlertCircle, Loader2  } from "lucide-react"
+import { UserCheck, Building, Home, AlertCircle, Loader2 } from "lucide-react"
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
-import { fetcher } from "@/common/webclient"
+import { dashboardAPI } from "@/common/api"
 import { AdminDashboardLayout } from "@/components/admin-dashboard-layout/admin-dashboard-layout"
 import { sessionUtils } from "@/common/session"
-
-// Mock statistics data
-const statsData = {
-  totalActiveTenants: 45,
-  totalActiveProperties: 12,
-  totalActiveRentals: 38,
-}
 
 export default function AdminDashboard() {
   const [isAuthorized, setIsAuthorized] = useState(false)
@@ -22,8 +15,13 @@ export default function AdminDashboard() {
   const [isLoading, setIsLoading] = useState(true)
   const [apiError, setApiError] = useState("")
   const [user, setUser] = useState({})
+  const [statsData, setStatsData] = useState({
+    totalActiveTenants: 0,
+    totalActiveProperties: 0,
+    totalActiveRentals: 0,
+  })
 
-  // Simulate API call on component mount
+  // API call on component mount
   useEffect(() => {
     const doInit = async () => {
       try {
@@ -44,6 +42,19 @@ export default function AdminDashboard() {
         const user = sessionUtils.getUser()
         setUser(user)
         setIsAuthorized(true)
+
+        // Fetch admin dashboard stats from backend
+        const statsResponse = await dashboardAPI.getDashboardStats()
+
+        if (statsResponse) {
+          setStatsData({
+            totalActiveTenants: statsResponse.totalActiveTenants || 0,
+            totalActiveProperties: statsResponse.totalActiveProperties || 0,
+            totalActiveRentals: statsResponse.totalActiveRentals || 0,
+          })
+        } else {
+          throw new Error(statsResponse?.message || "Failed to fetch dashboard statistics")
+        }
 
         console.log("Admin dashboard data loaded successfully")
       } catch (error) {
@@ -121,50 +132,50 @@ export default function AdminDashboard() {
   }
 
   return (
-        <AdminDashboardLayout>
-          {/* Welcome Section */}
-          <div className="mb-6">
-            <h1 className="text-3xl font-bold text-slate-900 mb-2">Hi, {user.fullName}!</h1>
-            <p className="text-slate-600">Welcome to Admin Panel</p>
-          </div>
-          {/* Statistics Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {/* Total Active Tenants */}
-            <Card className="shadow-lg hover:shadow-xl transition-shadow">
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium text-slate-600">Total Active Tenants</CardTitle>
-                <UserCheck className="h-6 w-6 text-blue-600" />
-              </CardHeader>
-              <CardContent>
-                <div className="text-3xl font-bold text-slate-900 mb-1">{statsData.totalActiveTenants}</div>
-                <p className="text-xs text-slate-500">Currently renting properties</p>
-              </CardContent>
-            </Card>
+    <AdminDashboardLayout>
+      {/* Welcome Section */}
+      <div className="mb-6">
+        <h1 className="text-3xl font-bold text-slate-900 mb-2">Hi, {user.fullName}!</h1>
+        <p className="text-slate-600">Welcome to Admin Panel</p>
+      </div>
+      {/* Statistics Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {/* Total Active Tenants */}
+        <Card className="shadow-lg hover:shadow-xl transition-shadow">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium text-slate-600">Total Registered Tenants</CardTitle>
+            <UserCheck className="h-6 w-6 text-blue-600" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-3xl font-bold text-slate-900 mb-1">{statsData.totalActiveTenants}</div>
+            <p className="text-xs text-slate-500">Successfully registered and Status Active</p>
+          </CardContent>
+        </Card>
 
-            {/* Total Active Properties/Rooms */}
-            <Card className="shadow-lg hover:shadow-xl transition-shadow">
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium text-slate-600">Total Active Properties</CardTitle>
-                <Building className="h-6 w-6 text-green-600" />
-              </CardHeader>
-              <CardContent>
-                <div className="text-3xl font-bold text-slate-900 mb-1">{statsData.totalActiveProperties}</div>
-                <p className="text-xs text-slate-500">Properties with available rooms</p>
-              </CardContent>
-            </Card>
+        {/* Total Active Properties/Rooms */}
+        <Card className="shadow-lg hover:shadow-xl transition-shadow">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium text-slate-600">Total Active Properties</CardTitle>
+            <Building className="h-6 w-6 text-green-600" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-3xl font-bold text-slate-900 mb-1">{statsData.totalActiveProperties}</div>
+            <p className="text-xs text-slate-500">All properties</p>
+          </CardContent>
+        </Card>
 
-            {/* Total Active Rentals */}
-            <Card className="shadow-lg hover:shadow-xl transition-shadow">
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium text-slate-600">Total Active Rentals</CardTitle>
-                <Home className="h-6 w-6 text-purple-600" />
-              </CardHeader>
-              <CardContent>
-                <div className="text-3xl font-bold text-slate-900 mb-1">{statsData.totalActiveRentals}</div>
-                <p className="text-xs text-slate-500">Currently active rental agreements</p>
-              </CardContent>
-            </Card>
-          </div>
-        </AdminDashboardLayout>
+        {/* Total Active Rentals */}
+        <Card className="shadow-lg hover:shadow-xl transition-shadow">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium text-slate-600">Total Active Rentals</CardTitle>
+            <Home className="h-6 w-6 text-purple-600" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-3xl font-bold text-slate-900 mb-1">{statsData.totalActiveRentals}</div>
+            <p className="text-xs text-slate-500">Currently active rental agreements</p>
+          </CardContent>
+        </Card>
+      </div>
+    </AdminDashboardLayout>
   )
 }
