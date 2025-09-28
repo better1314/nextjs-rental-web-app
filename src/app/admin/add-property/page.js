@@ -64,12 +64,12 @@ export default function AddPropertyPage() {
         setIsLoading(true)
 
         // Check if user is logged in and is admin
-        if (!sessionUtils.isLoggedIn()) {
+        if (await !sessionUtils.isLoggedIn()) {
           router.push("/login")
           return
         }
 
-        if (!sessionUtils.isAdmin()) {
+        if (await !sessionUtils.isAdmin()) {
           router.push("/")
           return
         }

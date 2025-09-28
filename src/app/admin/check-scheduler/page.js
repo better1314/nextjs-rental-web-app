@@ -48,11 +48,11 @@ export default function CheckSchedulerPage() {
     const doInit = async () => {
       try {
         setIsLoading(true)
-        if (!sessionUtils.isLoggedIn()) {
+        if (await !sessionUtils.isLoggedIn()) {
           router.push("/login")
           return
         }
-        if (!sessionUtils.isAdmin()) {
+        if (await !sessionUtils.isAdmin()) {
           router.push("/")
           return
         }

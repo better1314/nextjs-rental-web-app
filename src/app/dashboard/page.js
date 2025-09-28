@@ -26,7 +26,6 @@ import {
 import { fetcher } from "@/common/webclient"
 import { sessionUtils } from "@/common/session"
 import { TenantBillSection } from "@/components/tenant-bill-section"
-import { TenantBillSection } from "@/components/tenant-bill-section"
 
 export default function Dashboard() {
   const router = useRouter()
@@ -47,7 +46,7 @@ export default function Dashboard() {
           router.push("/login")
           return
         }
-        const user = sessionUtils.getUser()
+        const user = await sessionUtils.getUser()
         setUserDetails(user)
         setIsAuthorized(true)
 
