@@ -280,7 +280,7 @@ export default function EditPropertyPage() {
       if (!roomToRemove._isNew) {
         // If it's an existing room, call the API to delete it
         // await propertyAPI.deleteRoom(formData.propertyId, roomToRemove.roomId)
-        await fetcher("http://localhost:8081/property/deleteRoom", {
+        await fetcher("/property/deleteRoom", {
               body: JSON.stringify({
                 roomId: roomToRemove.roomId
               }),
@@ -371,7 +371,7 @@ export default function EditPropertyPage() {
         return _isNew ? { roomId: rest.roomId, roomName: rest.roomName, capacity: rest.capacity } : rest
       })
 
-      await fetcher("http://localhost:8081/property/editProperty", {
+      await fetcher("/property/editProperty", {
               body: JSON.stringify({
                 propertyId: formData.propertyId,
                 propertyName: formData.propertyName.trim(),
@@ -419,7 +419,7 @@ export default function EditPropertyPage() {
     setSuccessMessage("")
 
     try {
-      await fetcher("http://localhost:8081/property/deleteProperty", {
+      await fetcher("/property/deleteProperty", {
               body: JSON.stringify({
                 propertyId: formData.propertyId
               }),

@@ -129,7 +129,7 @@ export default function CreateAdminPage() {
     setSuccessMessage("")
 
     try {
-      const response = await fetcher("http://localhost:8081/user/registerAdmin", {
+      const response = await fetcher("/user/registerAdmin", {
               body : JSON.stringify({
                 user : {
                     fullName: formData.fullName.trim(),

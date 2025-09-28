@@ -1,9 +1,10 @@
 import axios from "axios"
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 export async function fetcher(url, options = {}) {
   try {
     const res = await axios.post(
-      url,
+      `${API_BASE_URL}${url}`,
       options.body ? JSON.parse(options.body) : {}, // actual POST body
       {
         headers: {
@@ -28,7 +29,7 @@ export async function fetcher(url, options = {}) {
 export async function get(url, options = {}) {
   try {
     const res = await axios.get(
-      url,
+      `${API_BASE_URL}${url}`,
       {
         headers: {
           'Content-Type': 'application/json',
@@ -52,7 +53,7 @@ export async function get(url, options = {}) {
 export async function fetchImg(url, options = {}) {
   try {
     const res = await axios.get(
-      url,
+      `${API_BASE_URL}${url}`,
       {
         responseType: "blob",
         headers: {

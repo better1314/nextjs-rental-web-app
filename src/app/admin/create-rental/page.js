@@ -315,7 +315,7 @@ export default function CreateRentalPage() {
 
       console.log("Submitting rental data:", submitData)
 
-      const rentalResponse = await fetcher("http://localhost:8081/rental/createRental", {
+      const rentalResponse = await fetcher("/rental/createRental", {
               body: JSON.stringify({
                 userId: formData.userId,
                 roomId: formData.roomId,

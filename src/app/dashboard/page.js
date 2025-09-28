@@ -62,7 +62,7 @@ export default function Dashboard() {
           return
         }
 
-        const rentalResponse = await fetcher("http://localhost:8081/rental/retrieveRental", {
+        const rentalResponse = await fetcher("/rental/retrieveRental", {
               body : JSON.stringify({
                 userId: user.userId,
               })

@@ -4,7 +4,7 @@ import { fetcher, fetchImg, get } from "@/common/webclient"
 export const dashboardAPI = {
   getDashboardStats: async () => {
     try{
-    const response = await get("http://localhost:8081/system/getDashboardStastics")
+    const response = await get("/system/getDashboardStastics")
 
     return response;
     }catch(error){
@@ -17,7 +17,7 @@ export const userAPI = {
   // Search users with pagination
   searchUsers: async (query = "", page = 1, limit = 20, mode = "") => {
     try {
-      const response = await fetcher("http://localhost:8081/user/searchUserList", {
+      const response = await fetcher("/user/searchUserList", {
         body: JSON.stringify({
           query: query.trim(),
           page: page,
@@ -88,7 +88,7 @@ export const propertyAPI = {
   // Search available rooms with pagination
   searchAvailableRooms: async (query = "", page = 1, limit = 20) => {
     try {
-      const response = await fetcher("http://localhost:8081/property/searchAvailableRooms", {
+      const response = await fetcher("/property/searchAvailableRooms", {
         body: JSON.stringify({
           query: query.trim(),
           page: page,
@@ -134,9 +134,7 @@ export const propertyAPI = {
   },
   searchOwners: async (query = "", page = 1, limit = 20, mode = "") => {
     try {
-      // Assuming your Spring Boot backend has an endpoint like /property/searchOwnerList
-      // that accepts query, page, limit, and mode, and returns ownerList and totalOwner.
-      const response = await fetcher("http://localhost:8081/property/getAllPropertyOwners", {
+      const response = await fetcher("/property/getAllPropertyOwners", {
         body: JSON.stringify({
           query: query.trim(),
           page: page,
@@ -197,7 +195,7 @@ export const propertyAPI = {
     }
   },
   searchProperties: async (query = "", page = 1, limit = 20) => {
-    const response = await fetcher("http://localhost:8081/property/searchProperty", {
+    const response = await fetcher("/property/searchProperty", {
         body: JSON.stringify({
           query: query.trim(),
           page: page,
@@ -221,7 +219,7 @@ export const propertyAPI = {
 
 export const rentalAPI = {
   searchRentals: async (query = "", page = 1, limit = 20) => {
-      const response = await fetcher("http://localhost:8081/rental/searchRental", {
+      const response = await fetcher("/rental/searchRental", {
         body: JSON.stringify({
           query: query.trim(),
           page: page,
@@ -243,7 +241,7 @@ export const rentalAPI = {
   },
 
   updateRental: async (rentalData) => {
-    await fetcher("http://localhost:8081/rental/updateRental", {
+    await fetcher("/rental/updateRental", {
         body: JSON.stringify({
           rentalId: rentalData.id,
           rentalStartDate: rentalData.rentalStartDate,
@@ -257,7 +255,7 @@ export const rentalAPI = {
 
   deleteRental: async (rentalId, remark) => {
     try{
-    const response = await fetcher("http://localhost:8081/rental/deleteRental", {
+    const response = await fetcher("/rental/deleteRental", {
         body: JSON.stringify({
           rentalId: rentalId,
           remark: remark,
@@ -272,7 +270,7 @@ export const rentalAPI = {
 }
 export const billAPI = {
   getBillTypes: async () => {
-    const response = await fetcher("http://localhost:8081/common/getParams", {
+    const response = await fetcher("/common/getParams", {
         body: JSON.stringify({
           paramCategory: "BILL_PAYMENT",
         }),
@@ -287,7 +285,7 @@ export const billAPI = {
   // Get bills for tenant by rental ID
   getTenantBills: async (rentalId) => {
     try {
-      const response = await fetcher("http://localhost:8081/payment/retrieveTenantBill", {
+      const response = await fetcher("/payment/retrieveTenantBill", {
         body: JSON.stringify({
           rentalId: rentalId,
         }),
@@ -314,7 +312,7 @@ export const billAPI = {
       formData.append("billId", billId)
       formData.append("receipt", file)
 
-      const response = await fetch("http://localhost:8081/payment/uploadReceipt", {
+      const response = await fetch("/payment/uploadReceipt", {
         method: "POST",
         body: formData,
       })
@@ -339,7 +337,7 @@ export const billAPI = {
   },
 
   createBills: async (rentalId, bills) => {
-    const response = await fetcher("http://localhost:8081/payment/createBill", {
+    const response = await fetcher("/payment/createBill", {
         body: JSON.stringify({
           rentalId: rentalId,
           billList: bills,
@@ -357,7 +355,7 @@ export const billAPI = {
     }
   },
   getBillsByRental: async (rentalId) => {
-    const response = await fetcher("http://localhost:8081/payment/retrieveBill", {
+    const response = await fetcher("/payment/retrieveBill", {
         body: JSON.stringify({
           rentalId: rentalId,
         }),
@@ -370,7 +368,7 @@ export const billAPI = {
   },
 
   updateBill: async (billId, billData) => {
-    await fetcher("http://localhost:8081/payment/editBill", {
+    await fetcher("/payment/editBill", {
         body: JSON.stringify({
           billId: billId,
           billType: billData.billType,
@@ -387,7 +385,7 @@ export const billAPI = {
   },
 
   deleteBill: async (billId) => {
-     await fetcher("http://localhost:8081/payment/deleteBill", {
+     await fetcher("/payment/deleteBill", {
         body: JSON.stringify({
           billId: billId,
         }),
@@ -400,7 +398,7 @@ export const billAPI = {
 
   getTenantBills: async (rentalId) => {
     try {
-      const response = await fetcher("http://localhost:8081/payment/retrieveBill", {
+      const response = await fetcher("/payment/retrieveBill", {
         body: JSON.stringify({
           rentalId: rentalId,
         }),
@@ -427,7 +425,7 @@ export const billAPI = {
       formData.append("billId", billId)
       formData.append("receipt", file)
 
-      const response = await fetch("http://localhost:8081/payment/uploadReceipt", {
+      const response = await fetch("/payment/uploadReceipt", {
         method: "POST",
         body: formData,
       })
@@ -456,7 +454,7 @@ export const approveBillAPI = {
   // Search bills for approval with pagination
   searchBillsForApproval: async (searchTerm = "", page = 1, limit = 20) => {
     try {
-      const response = await fetcher("http://localhost:8081/payment/retrieveBillsReceipt", {
+      const response = await fetcher("/payment/retrieveBillsReceipt", {
         body: JSON.stringify({
           query: searchTerm,
           page: page,
@@ -486,7 +484,7 @@ export const approveBillAPI = {
 
   getReceiptImage: async (imgPath) => {
     try {
-      const imageUrl = await fetchImg(`http://localhost:8081/payment/files/${imgPath}`)
+      const imageUrl = await fetchImg(`/payment/files/${imgPath}`)
 
       return {
         success: true,
@@ -504,7 +502,7 @@ export const approveBillAPI = {
   // Approve bill
   approveBill: async (receiptId, billId, username) => {
     try {
-      const response = await fetcher("http://localhost:8081/payment/approveBill", {
+      const response = await fetcher("/payment/approveBill", {
         body: JSON.stringify({
           action: "APPROVE",
           billId: billId,
@@ -529,7 +527,7 @@ export const approveBillAPI = {
   // Reject bill
   rejectBill: async (receiptId, billId, username) => {
     try {
-      const response = await fetcher("http://localhost:8081/payment/approveBill", {
+      const response = await fetcher("/payment/approveBill", {
         body: JSON.stringify({
           action: "REJECT",
           billId: billId,
@@ -556,7 +554,7 @@ export const schedulerAPI = {
   // Get all schedulers
   getSchedulers: async () => {
     try {
-      const response = await get("http://localhost:8081/system/getAllSchedulers")
+      const response = await get("/system/getAllSchedulers")
 
       return {
         success: true,
@@ -570,7 +568,7 @@ export const schedulerAPI = {
   },
 
   getSchedulerHistory: async (schedulerId) => {
-    const response = await fetcher("http://localhost:8081/system/getSchedulerHistory", {
+    const response = await fetcher("/system/getSchedulerHistory", {
         body: JSON.stringify({
           schedulerId: schedulerId,
         }),
@@ -586,7 +584,7 @@ export const schedulerAPI = {
   // Manual trigger scheduler
   triggerScheduler: async (schedulerId) => {
     try{
-    const response = await fetcher("http://localhost:8081/system/manualTrigger", {
+    const response = await fetcher("/system/manualTrigger", {
         body: JSON.stringify({
           schedulerId: schedulerId,
         }),

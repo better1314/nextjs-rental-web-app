@@ -233,7 +233,7 @@ export default function AddPropertyPage() {
     setSuccessMessage("")
 
     try {
-      const response = await fetcher("http://localhost:8081/property/addProperty", {
+      const response = await fetcher("/property/addProperty", {
                     body : JSON.stringify({
                             propertyOwnerDetails: {
                             fullName: formData.ownerFullName.trim(),

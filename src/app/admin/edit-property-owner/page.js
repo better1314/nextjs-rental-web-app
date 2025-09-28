@@ -239,8 +239,7 @@ export default function EditPropertyOwnerPage() {
     setSuccessMessage("")
 
     try {
-      // Assuming your Spring Boot API expects a similar structure
-      await fetcher("http://localhost:8081/property/editPropertyOwner", {
+      await fetcher("/property/editPropertyOwner", {
         body: JSON.stringify({
           propertyOwnerDetails: {
             ownerId: formData.ownerId,

@@ -274,7 +274,7 @@ export default function EditUserPage() {
     setSuccessMessage("")
 
     try {
-      await fetcher("http://localhost:8081/user/editUser", {
+      await fetcher("/user/editUser", {
               body: JSON.stringify({
                 user : {
                     userId : formData.userId,
@@ -334,7 +334,7 @@ export default function EditUserPage() {
         newStatus: newStatus,
       }
 
-      await fetcher("http://localhost:8081/user/updateUserStatus", {
+      await fetcher("/user/updateUserStatus", {
         body : JSON.stringify({
             userId : formData.userId,
             mode : newStatus,

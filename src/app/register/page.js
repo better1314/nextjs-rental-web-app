@@ -129,7 +129,7 @@ export default function RegisterPage() {
     setSuccessMessage("")
 
     try {
-      const response = await fetcher("http://localhost:8081/user/register", {
+      const response = await fetcher("/user/register", {
               body : JSON.stringify({
                 user : {
                     fullName: formData.fullName.trim(),

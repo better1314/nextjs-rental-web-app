@@ -76,7 +76,7 @@ export default function LoginPage() {
     setApiError("")
 
     try {
-      const response = await fetcher("http://localhost:8081/login", {
+      const response = await fetcher("/login", {
         body : JSON.stringify({
           emailAddress: formData.email,
           password: formData.password
